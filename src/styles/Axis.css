@@ -1,0 +1,16 @@
+.Axis {
+  width: 200px;
+  height: 200px;
+  background: rgba(128, 128, 128, 0.3);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Axis-inner {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: rgba(128, 128, 128, 0.7);
+}
