@@ -1,23 +1,23 @@
 import * as dgram from 'dgram';
-import { AddressInfo } from 'net';
-const server = dgram.createSocket('udp4');
+import { init as httpServerInit } from './httpServer';
+import { init as stateListenerInit } from './stateListener';
+import { init as videoListenerInit } from './videoListener';
+import { init as clientsListenerInit } from './clientsListener';
+
+const HTTP_SERVER_PORT = 3000;
 const SEND_COMMAND_PORT = 8889;
-const RECEIVE_STATE_PORT = 8890;
 const DRONE_IP_ADDRESS = '192.168.10.1';
 
-server.on('error', (err) => {
-  console.log(`server error:\n${err.stack}`);
-  server.close();
-});
+const udpServer = dgram.createSocket('udp4');
 
-server.on('message', (msg, rinfo) => {
-  console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
-});
+const httpServer = httpServerInit();
+const [sendState, sendVideo] = clientsListenerInit(httpServer);
+stateListenerInit(sendState);
+videoListenerInit(sendVideo);
 
-server.on('listening', () => {
-  const address = server.address() as AddressInfo;
-  console.log(`server listening ${address.address}:${address.port}`);
-});
+udpServer.send('command', SEND_COMMAND_PORT, DRONE_IP_ADDRESS);
+// udpServer.send('streamon', SEND_COMMAND_PORT, DRONE_IP_ADDRESS);
 
-server.bind(RECEIVE_STATE_PORT);
-server.send('command', SEND_COMMAND_PORT, DRONE_IP_ADDRESS);
+httpServer.listen(HTTP_SERVER_PORT, () => {
+  console.log('httpServer listening on *:3000');
+});
