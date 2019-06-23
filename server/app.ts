@@ -18,7 +18,7 @@ stateListenerInit(sendState);
 videoListenerInit(sendVideo);
 
 udpServer.send("command", SEND_COMMAND_PORT, DRONE_IP_ADDRESS);
-// udpServer.send('streamon', SEND_COMMAND_PORT, DRONE_IP_ADDRESS);
+udpServer.send("streamon", SEND_COMMAND_PORT, DRONE_IP_ADDRESS);
 
 httpServer.listen(HTTP_SERVER_PORT, () => {
   console.log(`httpServer listening on *:${HTTP_SERVER_PORT}`);

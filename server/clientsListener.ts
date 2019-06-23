@@ -30,7 +30,7 @@ export function init(http: http.Server): [SendStateFn, SendVideoFn] {
 
   function sendVideoToClients(video: Buffer): void {
     for (const client of clients) {
-      client.send("video", video);
+      client.emit("video", video);
     }
   }
 

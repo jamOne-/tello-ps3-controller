@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import "../styles/App.css";
 import CameraStream from "./CameraStream";
 import Axis from "./Axis";
+import TelloState from "./TelloState";
 import { ControllerService, Axes } from "../services/ControllerService";
 import { SocketService } from "../services/SocketService";
 
 interface State {
   axes: Axes;
+  telloState?: string;
+  videoFrame?: Buffer;
 }
 
 class App extends Component<{}, State> {
@@ -16,7 +19,7 @@ class App extends Component<{}, State> {
 
   state = {
     axes: [0, 0, 0, 0] as Axes
-  };
+  } as State;
 
   componentWillMount() {
     this._controllerService = new ControllerService();
@@ -30,17 +33,17 @@ class App extends Component<{}, State> {
 
   tick = () => {
     const axes = this._controllerService!.getAxes();
-    // console.log(axes);
-
     this.setState({ axes });
   };
 
   render() {
-    const [x1, y1, x2, y2] = this.state.axes;
+    const { axes, videoFrame, telloState } = this.state;
+    const [x1, y1, x2, y2] = axes;
 
     return (
       <div className="App">
-        <CameraStream />
+        <TelloState telloState={telloState} />
+        <CameraStream videoFrame={videoFrame} />
 
         <div className="App-Axis-container">
           <Axis x={x1} y={y1} />
@@ -55,9 +58,16 @@ class App extends Component<{}, State> {
     this._socketService = new SocketService();
     this._socketService.connect();
 
-    this._socketService.registerHandler("state", (state: Buffer) =>
-      console.log(textDecoder.decode(state))
-    );
+    this._socketService.registerHandler("state", (state: Buffer) => {
+      const telloState = textDecoder.decode(state);
+      this.setState({ telloState });
+    });
+
+    this._socketService.registerHandler("video", (videoFrame: Buffer) => {
+      // console.log("received videoFrame", videoFrame);
+      this.setState({ videoFrame });
+      window["videoFrame"] = videoFrame;
+    });
   }
 }
 
