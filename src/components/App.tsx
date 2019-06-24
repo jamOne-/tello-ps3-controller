@@ -6,6 +6,8 @@ import TelloState from "./TelloState";
 import { ControllerService, Axes } from "../services/ControllerService";
 import { SocketService } from "../services/SocketService";
 
+declare var Decoder: any;
+
 interface State {
   axes: Axes;
   telloState?: string;
@@ -63,10 +65,14 @@ class App extends Component<{}, State> {
       this.setState({ telloState });
     });
 
-    this._socketService.registerHandler("video", (videoFrame: Buffer) => {
-      // console.log("received videoFrame", videoFrame);
-      this.setState({ videoFrame });
-      window["videoFrame"] = videoFrame;
+    const decoder = new Decoder({ rgb: true });
+    decoder.onPictureDecoded = function(buffer, width, height) {
+      console.log("onPictureDecoded!", buffer, width, height);
+    };
+
+    this._socketService.registerHandler("video", (data: ArrayBuffer) => {
+      decoder.decode(new Uint8Array(data));
+      // this.setState({ videoFrame });
     });
   }
 }

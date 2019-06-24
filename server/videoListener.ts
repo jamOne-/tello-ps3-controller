@@ -1,5 +1,6 @@
 import * as dgram from "dgram";
 import { AddressInfo } from "net";
+import { spawn } from "child_process";
 const RECEIVE_VIDEO_PORT = 11111;
 
 export function init(videoCb: (video: Buffer) => void) {
@@ -11,16 +12,15 @@ export function init(videoCb: (video: Buffer) => void) {
     server.close();
   });
 
+  let dupa = 0;
+
   server.on("message", (msg, rinfo) => {
-    // console.log(`Video listener: ${msg} from ${rinfo.address}:${rinfo.port}`);
     videoPacket = Buffer.concat([videoPacket, msg]);
 
     if (msg.length !== 1460) {
       videoCb(videoPacket);
       videoPacket = Buffer.from([]);
     }
-
-    // videoCb(msg);
   });
 
   server.on("listening", () => {
