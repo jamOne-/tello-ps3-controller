@@ -6,8 +6,6 @@ import TelloState from "./TelloState";
 import { ControllerService, Axes } from "../services/ControllerService";
 import { SocketService } from "../services/SocketService";
 
-declare var Decoder: any;
-
 interface State {
   axes: Axes;
   telloState?: string;
@@ -16,7 +14,6 @@ interface State {
 
 class App extends Component<{}, State> {
   private _controllerService: ControllerService | undefined;
-  private _socketService: SocketService | undefined;
   private _tickSubscription: number | undefined;
 
   state = {
@@ -45,7 +42,7 @@ class App extends Component<{}, State> {
     return (
       <div className="App">
         <TelloState telloState={telloState} />
-        <CameraStream videoFrame={videoFrame} />
+        <CameraStream />
 
         <div className="App-Axis-container">
           <Axis x={x1} y={y1} />
@@ -57,22 +54,12 @@ class App extends Component<{}, State> {
 
   private _initSocketService() {
     const textDecoder = new TextDecoder("utf-8");
-    this._socketService = new SocketService();
-    this._socketService.connect();
+    const socketService = SocketService.instance;
+    socketService.connect();
 
-    this._socketService.registerHandler("state", (state: Buffer) => {
+    socketService.registerHandler("state", (state: Buffer) => {
       const telloState = textDecoder.decode(state);
       this.setState({ telloState });
-    });
-
-    const decoder = new Decoder({ rgb: true });
-    decoder.onPictureDecoded = function(buffer, width, height) {
-      console.log("onPictureDecoded!", buffer, width, height);
-    };
-
-    this._socketService.registerHandler("video", (data: ArrayBuffer) => {
-      decoder.decode(new Uint8Array(data));
-      // this.setState({ videoFrame });
     });
   }
 }

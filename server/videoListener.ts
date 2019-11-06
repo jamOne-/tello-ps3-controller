@@ -12,15 +12,13 @@ export function init(videoCb: (video: Buffer) => void) {
     server.close();
   });
 
-  let dupa = 0;
-
   server.on("message", (msg, rinfo) => {
-    videoPacket = Buffer.concat([videoPacket, msg]);
-
-    if (msg.length !== 1460) {
-      videoCb(videoPacket);
-      videoPacket = Buffer.from([]);
-    }
+    // videoPacket = Buffer.concat([videoPacket, msg]);
+    // if (msg.length !== 1460) {
+    //   videoCb(videoPacket);
+    //   videoPacket = Buffer.from([]);
+    // }
+    // videoCb(msg);
   });
 
   server.on("listening", () => {
@@ -30,5 +28,5 @@ export function init(videoCb: (video: Buffer) => void) {
     );
   });
 
-  server.bind(RECEIVE_VIDEO_PORT);
+  // server.bind(RECEIVE_VIDEO_PORT);
 }
