@@ -1,11 +1,14 @@
 import * as http from "http";
 import * as socketIo from "socket.io";
-import { startLiveStream } from "./liveStream3";
+import * as WebSocket from "ws";
+import { VideoListenerFn } from "./liveStream4";
 
 type Client = socketIo.Socket;
 type SendStateFn = (state: Buffer) => void;
 
-export function init(http: http.Server): SendStateFn {
+const VIDEO_WEBSOCKET_PORT = 8082;
+
+export function init(http: http.Server): [SendStateFn, VideoListenerFn] {
   const clients: Client[] = [];
   const io = socketIo(http, { transports: ["websocket"] });
 
@@ -26,9 +29,30 @@ export function init(http: http.Server): SendStateFn {
     socket.on("command", (command: any) => {
       console.log(`Command received: ${command}`);
     });
-
-    startLiveStream(socket.emit.bind(socket, "video"));
   });
+
+  const videoSocketServer = new WebSocket.Server({
+    port: VIDEO_WEBSOCKET_PORT,
+    perMessageDeflate: false
+  });
+
+  videoSocketServer.on("connection", socket => {
+    console.log(
+      `VideoWebSocket: new connection (${videoSocketServer.clients.size})`
+    );
+
+    socket.on(
+      "close",
+      console.log.bind(
+        console,
+        `VideoWebSocket: client disconnected (${videoSocketServer.clients.size})`
+      )
+    );
+  });
+
+  console.log(
+    `VideoWebSocket: awaiting WebSocket connections on ws://localhost:${VIDEO_WEBSOCKET_PORT}/`
+  );
 
   function sendStateToClients(state: Buffer): void {
     for (const client of clients) {
@@ -36,5 +60,13 @@ export function init(http: http.Server): SendStateFn {
     }
   }
 
-  return sendStateToClients;
+  function sendVideoToClients(chunk: Buffer): void {
+    for (const client of videoSocketServer.clients) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(chunk);
+      }
+    }
+  }
+
+  return [sendStateToClients, sendVideoToClients];
 }
