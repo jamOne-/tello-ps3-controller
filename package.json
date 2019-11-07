@@ -16,7 +16,7 @@
     "@types/ws": "^6.0.3",
     "express": "^4.17.1",
     "fluent-ffmpeg": "^2.1.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.1",
