@@ -3,40 +3,56 @@ import "../styles/App.css";
 import CameraStream from "./CameraStream";
 import Axis from "./Axis";
 import TelloState from "./TelloState";
-import { ControllerService, Axes } from "../services/ControllerService";
+import {
+  ControllerService,
+  Axes,
+  ButtonsMap
+} from "../services/ControllerService";
 import { SocketService } from "../services/SocketService";
+import {
+  TelloControllerService,
+  TelloCommand
+} from "../services/TelloControllerService";
 
 interface State {
   axes: Axes;
+  buttons: ButtonsMap;
   telloState?: string;
-  videoFrame?: Buffer;
 }
 
 class App extends Component<{}, State> {
-  private _controllerService: ControllerService | undefined;
   private _tickSubscription: number | undefined;
+  private _telloControllerService: TelloControllerService | undefined;
 
   state = {
     axes: [0, 0, 0, 0] as Axes
   } as State;
 
-  componentWillMount() {
-    this._controllerService = new ControllerService();
+  componentDidMount() {
+    ControllerService.instance.init();
     this._tickSubscription = window.setInterval(this.tick, 1000 / 60);
     this._initSocketService();
+    this._telloControllerService = new TelloControllerService(this.sendCommand);
   }
 
   componentWillUnmount() {
     window.clearInterval(this._tickSubscription);
   }
 
+  sendCommand = (command: TelloCommand) => {
+    SocketService.instance.send("command", command);
+  };
+
   tick = () => {
-    const axes = this._controllerService!.getAxes();
-    this.setState({ axes });
+    const axes = ControllerService.instance.getAxes();
+    const buttons = ControllerService.instance.getButtons();
+    this._telloControllerService.update(axes, buttons);
+
+    this.setState({ axes, buttons });
   };
 
   render() {
-    const { axes, videoFrame, telloState } = this.state;
+    const { axes, telloState } = this.state;
     const [x1, y1, x2, y2] = axes;
 
     return (

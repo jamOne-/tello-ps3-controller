@@ -2,15 +2,19 @@ import * as http from "http";
 import * as socketIo from "socket.io";
 import * as WebSocket from "ws";
 import { VideoListenerFn } from "./liveStream4";
+import { TelloCommandSender, TelloCommand } from "./telloController";
 
 type Client = socketIo.Socket;
 type SendStateFn = (state: Buffer) => void;
 
 const VIDEO_WEBSOCKET_PORT = 8082;
 
-export function init(http: http.Server): [SendStateFn, VideoListenerFn] {
+export function init(
+  http: http.Server,
+  commandListener: TelloCommandSender
+): [SendStateFn, VideoListenerFn] {
   const clients: Client[] = [];
-  const io = socketIo(http, { transports: ["websocket"] });
+  const io = socketIo(http);
 
   io.on("connection", socket => {
     clients.push(socket);
@@ -26,8 +30,9 @@ export function init(http: http.Server): [SendStateFn, VideoListenerFn] {
       console.log(`Client disconnected (${clients.length})`);
     });
 
-    socket.on("command", (command: any) => {
-      console.log(`Command received: ${command}`);
+    socket.on("command", (command: TelloCommand) => {
+      console.log(`Command received: ${JSON.stringify(command)}`);
+      commandListener(command);
     });
   });
 

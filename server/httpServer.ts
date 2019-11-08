@@ -6,7 +6,6 @@ export function init(): http.Server {
   const httpServer = http.createServer(app);
 
   app.use("/", express.static("build"));
-  app.use("/live", express.static("live"));
 
   return httpServer;
 }

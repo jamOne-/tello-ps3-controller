@@ -12,8 +12,18 @@ export class SocketService {
   private static _instance: SocketService | undefined;
   private _socket: SocketIOClient.Socket | undefined;
 
+  private constructor() {}
+
+  get socket(): SocketIOClient.Socket {
+    if (!this._socket) {
+      throw new Error("Socket is null");
+    }
+
+    return this._socket;
+  }
+
   connect(): void {
-    const socket = io({ transports: ["websocket"], upgrade: false });
+    const socket = io();
     this._socket = socket;
 
     socket.on("connect", () => {
@@ -25,17 +35,15 @@ export class SocketService {
     });
   }
 
-  registerHandler(event: string, fn: Function): void {
-    if (!this._socket) {
-      throw new Error("Socket is null");
-    }
-
-    this._socket.on(event, fn);
+  disconnect(): void {
+    this.socket.disconnect();
   }
 
-  disconnect(): void {
-    if (this._socket) {
-      this._socket.disconnect();
-    }
+  registerHandler(event: string, fn: Function): void {
+    this.socket.on(event, fn);
+  }
+
+  send(event: string, value?: any): void {
+    this.socket.emit(event, value);
   }
 }

@@ -4,7 +4,7 @@ import * as child_process from "child_process";
 export type VideoListenerFn = (chunk: Buffer) => void;
 
 const INPUT_ADDRESS = "udp://0.0.0.0:11111";
-const RECORD_STREAM = false;
+const RECORD_STREAM = true;
 
 export function startLiveStream(
   listener: VideoListenerFn
@@ -20,7 +20,7 @@ export function startLiveStream(
       "-vcodec",
       "mpeg1video",
       "-b:v",
-      "5000k",
+      "10000k",
       "-tune",
       "zerolatency",
       "-preset",
@@ -48,9 +48,9 @@ export function startLiveStream(
     }
   });
 
-  ffmpegProcess.stderr.on("data", data =>
-    console.log(`FFMPEG stderr: ${data}`)
-  );
+  // ffmpegProcess.stderr.on("data", data =>
+  //   console.log(`FFMPEG stderr: ${data}`)
+  // );
 
   ffmpegProcess.on("exit", code => {
     console.log(`FFMPEG terminated with code ${code}`);
