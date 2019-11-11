@@ -2,6 +2,9 @@
   height: 100vh;
   width: 100vw;
   position: relative;
+  display: flex;
+  justify-content: center;
+  background-color: #2d3436;
 }
 
 .App-Axis-container {
