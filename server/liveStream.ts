@@ -1,68 +1,69 @@
-// based on https://github.com/jaredpetersen/raspi-live/blob/master/lib/server.js
+import * as fs from "fs";
+import * as child_process from "child_process";
 
-import * as ffmpeg from "fluent-ffmpeg";
-import * as path from "path";
-import * as sb from "stream-buffers";
+export type VideoListenerFn = (chunk: Buffer) => void;
 
-export class VideoStream {
-  private _cameraStream: sb.ReadableStreamBuffer = new sb.ReadableStreamBuffer();
-  private _videoPackets: Buffer[] = [];
+const INPUT_ADDRESS = "udp://0.0.0.0:11111";
 
-  constructor() {
-    // this._cameraStream.on("data", console.log);
+export function startLiveStream(
+  listener: VideoListenerFn,
+  recordStream: boolean,
+  videoBitrate: string
+): child_process.ChildProcess {
+  const ffmpegProcess = child_process.spawn(
+    "ffmpeg",
+    [
+      "-hide_banner",
+      "-i",
+      INPUT_ADDRESS,
+      "-vcodec",
+      "mpeg1video",
+      "-b:v",
+      videoBitrate,
+      "-tune",
+      "zerolatency",
+      "-preset",
+      "ultrafast",
+      "-strict",
+      "experimental",
+      "-r",
+      "30",
+      // "-probesize",
+      // "2000",
+      // "-g",
+      // "2",
+      "-f",
+      "mpegts",
+      "-"
+    ],
+    { detached: false }
+  );
+
+  let recordingStream: fs.WriteStream | null = null;
+  if (recordStream) {
+    const path = `records/${Date.now()}.ts`;
+    recordingStream = fs.createWriteStream(path);
   }
 
-  handleVideoChunk(videoChunk: Buffer): void {
-    this._videoPackets.push(videoChunk);
+  ffmpegProcess.stdout.on("data", chunk => {
+    listener(chunk);
 
-    if (videoChunk.length !== 1460) {
-      this._cameraStream.put(Buffer.concat(this._videoPackets));
-      this._cameraStream.resume();
-      // console.log(Buffer.concat(this._videoPackets));
-      this._videoPackets = [];
+    if (recordingStream !== null) {
+      recordingStream.write(chunk);
     }
-  }
+  });
 
-  createVideoStreamFile(): void {
-    const time = "2";
-    const listSize = "10";
-    const storageSize = "10";
-    const directory = "./";
+  // ffmpegProcess.stderr.on("data", data =>
+  //   console.log(`FFMPEG stderr: ${data}`)
+  // );
 
-    const outputOptions = [
-      "-hls_time",
-      time,
-      "-hls_list_size",
-      listSize,
-      "-hls_delete_threshold",
-      storageSize,
-      "-hls_flags",
-      "split_by_time+delete_segments+second_level_segment_index",
-      "-strftime",
-      "1",
-      "-hls_segment_filename",
-      path.join(directory, "%s-%%d.m4s"),
-      "-hls_segment_type",
-      "fmp4"
-    ];
+  ffmpegProcess.on("exit", code => {
+    console.log(`FFMPEG terminated with code ${code}`);
 
-    ffmpeg()
-      .input(this._cameraStream)
-      .on("start", function(commandLine) {
-        console.log("Spawned Ffmpeg with command: " + commandLine);
-      })
-      .on("error", function(err, stdout, stderr) {
-        //   console.log('ffmpeg stdout: ' + stdout);
-        console.log("ffmpeg stderr: " + stderr);
-      })
-      .on("end", function() {
-        console.log("ended");
-      })
-      .noAudio()
-      .videoCodec("copy")
-      .format("hls")
-      .inputOptions(["-re"])
-      .outputOptions(outputOptions)
-      .output(path.join(directory, "livestream.m3u8"));
-  }
+    if (recordingStream !== null) {
+      recordingStream.close();
+    }
+  });
+
+  return ffmpegProcess;
 }
