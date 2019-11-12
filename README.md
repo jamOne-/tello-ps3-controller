@@ -2,7 +2,7 @@
 
 ![screenshot](https://raw.githubusercontent.com/jamOne-/tello-ps3-controller/master/screenshots/2019_11_12.png)
 
-Web application displaying Ryze Tello's state and stream & allowing to control a drone with PS3 pad.
+Web application displaying Ryze Tello's state and stream, allowing to control a drone with PS3 pad.
 
 Application uses:
 
