@@ -29,7 +29,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server:start": "node server/dist/app.js",
-    "server:watch": "cd server && tsc --watch"
+    "server:watch": "cd server && tsc --watch",
+    "server:build": "cd server && tsc"
   },
   "eslintConfig": {
     "extends": "react-app"
