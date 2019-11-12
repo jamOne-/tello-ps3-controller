@@ -4,10 +4,10 @@ import * as child_process from "child_process";
 export type VideoListenerFn = (chunk: Buffer) => void;
 
 const INPUT_ADDRESS = "udp://0.0.0.0:11111";
-const RECORD_STREAM = true;
 
 export function startLiveStream(
-  listener: VideoListenerFn
+  listener: VideoListenerFn,
+  recordStream: boolean
 ): child_process.ChildProcess {
   const ffmpegProcess = child_process.spawn(
     "ffmpeg",
@@ -18,7 +18,7 @@ export function startLiveStream(
       "-vcodec",
       "mpeg1video",
       "-b:v",
-      "1000k",
+      "2000k",
       "-tune",
       "zerolatency",
       "-preset",
@@ -39,7 +39,7 @@ export function startLiveStream(
   );
 
   let recordingStream: fs.WriteStream | null = null;
-  if (RECORD_STREAM) {
+  if (recordStream) {
     const path = `records/${Date.now()}.ts`;
     recordingStream = fs.createWriteStream(path);
   }
