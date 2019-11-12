@@ -13,7 +13,11 @@ class CameraStream extends Component {
 
   componentDidMount() {
     const canvas = this._canvasRef.current;
-    this._player = new JSMpeg.Player(STREAM_PATH, { canvas, autoplay: true });
+    this._player = new JSMpeg.Player(STREAM_PATH, {
+      canvas,
+      autoplay: true,
+      audio: false
+    });
   }
 
   render() {
