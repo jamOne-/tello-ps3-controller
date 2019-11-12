@@ -13,7 +13,8 @@ Application uses:
 
 ## Running
 
-0. Install `ffmpeg` and app dependencies:
+0. Install [ffmpeg](https://ffmpeg.org).
+   Install app dependencies:
    ```
    yarn
    ```
