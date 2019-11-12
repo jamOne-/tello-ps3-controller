@@ -53,9 +53,7 @@ export function startLiveStream(
     }
   });
 
-  // ffmpegProcess.stderr.on("data", data =>
-  //   console.log(`FFMPEG stderr: ${data}`)
-  // );
+  ffmpegProcess.stderr.pipe(process.stdout);
 
   ffmpegProcess.on("exit", code => {
     console.log(`FFMPEG terminated with code ${code}`);
