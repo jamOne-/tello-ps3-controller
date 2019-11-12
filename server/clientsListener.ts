@@ -31,7 +31,7 @@ export function init(
     });
 
     socket.on("command", (command: TelloCommand) => {
-      console.log(`Command received: ${JSON.stringify(command)}`);
+      // console.log(`Command received: ${JSON.stringify(command)}`);
       commandListener(command);
     });
   });
