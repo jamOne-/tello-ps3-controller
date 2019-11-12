@@ -1,7 +1,7 @@
 .Axis {
-  width: 200px;
-  height: 200px;
-  background: rgba(128, 128, 128, 0.3);
+  width: 150px;
+  height: 150px;
+  background: #95a5a620;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -9,8 +9,8 @@
 }
 
 .Axis-inner {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  background-color: rgba(128, 128, 128, 0.7);
+  background-color: #ecf0f1da;
 }

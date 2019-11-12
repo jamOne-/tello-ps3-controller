@@ -57,8 +57,13 @@ class App extends Component<{}, State> {
 
     return (
       <div className="App">
-        <TelloState telloState={telloState} />
-        <CameraStream />
+        <div className="App__stream-container">
+          <div className="App-TelloState-container">
+            <TelloState telloStateString={telloState} />
+          </div>
+
+          <CameraStream />
+        </div>
 
         <div className="App-Axis-container">
           <Axis x={x1} y={y1} />

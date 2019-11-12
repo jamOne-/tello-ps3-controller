@@ -4,10 +4,10 @@ import "../styles/CameraStream.css";
 declare const JSMpeg: any;
 const VIDEO_WEBSOCKET_PORT = 8082;
 const STREAM_PATH = `ws://localhost:${VIDEO_WEBSOCKET_PORT}/`;
+const STREAM_WIDTH = "960";
+const STREAM_HEIGHT = "720";
 
-interface Props {}
-
-class CameraStream extends Component<Props> {
+class CameraStream extends Component {
   private _canvasRef = React.createRef<HTMLCanvasElement>();
   private _player: any = null;
 
@@ -17,7 +17,14 @@ class CameraStream extends Component<Props> {
   }
 
   render() {
-    return <canvas ref={this._canvasRef} className="CameraStream" />;
+    return (
+      <canvas
+        ref={this._canvasRef}
+        className="CameraStream"
+        width={STREAM_WIDTH}
+        height={STREAM_HEIGHT}
+      />
+    );
   }
 }
 

@@ -25,14 +25,14 @@ export class TelloControllerService {
     }
 
     const [x1, y1, yaw, y2] = axes;
-    const valueFactor = 0.75;
+    const rotationFactor = 0.5;
 
     this._commandListener({
       type: "rc",
-      lr: Math.round(x1 * 100 * valueFactor),
-      fb: Math.round(-y1 * 100 * valueFactor),
-      ud: Math.round(-y2 * 100 * valueFactor),
-      yaw: Math.round(yaw * 100 * valueFactor)
+      lr: Math.round(x1 * 100),
+      fb: Math.round(-y1 * 100),
+      ud: Math.round(-y2 * 100),
+      yaw: Math.round(yaw * 100 * rotationFactor)
     });
   }
 }

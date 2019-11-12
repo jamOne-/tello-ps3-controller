@@ -4,7 +4,8 @@
   position: relative;
   display: flex;
   justify-content: center;
-  background-color: #2d3436;
+  font-family: "Roboto", sans-serif;
+  background: url("/polymesh3-02-01.jpg") center no-repeat;
 }
 
 .App-Axis-container {
@@ -14,4 +15,15 @@
   justify-content: space-between;
   bottom: 0;
   padding: 50px;
+}
+
+.App-TelloState-container {
+  position: absolute;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.App__stream-container {
+  position: relative;
+  height: 100%;
 }
