@@ -1,8 +1,8 @@
 # DJI Ryze Tello PS3 Pad Controller
 
-![screenshot](screenshots/2019_11_11.png)
+![screenshot](https://raw.githubusercontent.com/jamOne-/tello-ps3-controller/master/screenshots/2019_11_12.png)
 
-Web application displaying Ryze Tello's state and stream & allowing to control a drone with PS3 pad.
+Web application displaying Ryze Tello's state and stream, allowing to control a drone with PS3 pad.
 
 Application uses:
 
@@ -13,7 +13,8 @@ Application uses:
 
 ## Running
 
-0. Install `ffmpeg` and app dependencies:
+0. Install [ffmpeg](https://ffmpeg.org). \
+   Install app dependencies:
    ```
    yarn
    ```
