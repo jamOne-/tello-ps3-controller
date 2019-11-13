@@ -68,7 +68,7 @@ function decodeTelloState(state: string): TelloState {
   return state.split(";").reduce((telloState, s) => {
     const split = s.split(":");
 
-    if (split.length == 2) {
+    if (split.length === 2) {
       const [key, value] = split;
       telloState[key] = parseFloat(value);
     }

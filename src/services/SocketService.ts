@@ -2,7 +2,7 @@ import io from "socket.io-client";
 
 export class SocketService {
   static get instance(): SocketService {
-    if (this._instance == undefined) {
+    if (this._instance === undefined) {
       this._instance = new SocketService();
     }
 

@@ -60,9 +60,8 @@ export class ControllerService {
       createEmptyButtonsArray(Object.entries(BUTTONS).length);
 
     return BUTTONS.reduce(
-      (buttonsMap, key, index) => (
-        (buttonsMap[key] = buttons[index]), buttonsMap
-      ),
+      (buttonsMap, key, index) =>
+        (buttonsMap[key] = buttons[index]) && buttonsMap,
       {} as ButtonsMap
     );
   }
