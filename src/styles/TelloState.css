@@ -1,7 +1,7 @@
 .TelloState {
   width: 100%;
   padding: 5px 10px;
-  background-color: #ecf0f130;
+  background-color: #303751aa;
 }
 
 .TelloState__row {
@@ -15,10 +15,4 @@
 .TelloState__item {
   font-size: 20px;
   color: #ecf0f1;
-}
-
-.TelloState__wrapper {
-}
-
-.TelloState__background {
 }
