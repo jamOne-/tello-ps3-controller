@@ -51,7 +51,7 @@ To detect pad on Windows 10 I had to install [ScpToolkit](https://github.com/nef
 
 - add drone speed adjustment
 - reduce control latency
-- reduce stream latency (WebRTC?)
+- reduce stream latency (WebRTC? https://qiita.com/a-baba/items/d728d580f89473c5fd18)
 - improve control experience
 
 ## Development
