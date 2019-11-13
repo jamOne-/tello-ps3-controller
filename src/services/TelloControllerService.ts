@@ -12,7 +12,7 @@ export class TelloControllerService {
   private _commandListener: CommandListener;
 
   constructor(commandListener: CommandListener) {
-    this._commandListener = _.throttle(commandListener, 50);
+    this._commandListener = _.throttle(commandListener, 200);
   }
 
   update(axes: Axes, buttons: ButtonsMap): void {
