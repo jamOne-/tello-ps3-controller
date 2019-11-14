@@ -26,9 +26,9 @@ interface Props {
 
 function TelloStateComponent({ telloStateString }: Props) {
   if (!telloStateString) {
-    return null;
-    // telloStateString =
-    //   "pitch:0;roll:0;yaw:0;vgx:0;vgy:0;vgz:0;templ:57;temph:59;tof:10;h:0;bat:92;baro:130.00;time:0;agx:-12.00;agy:16.00;agz:-998.00;";
+    // return null;
+    telloStateString =
+      "pitch:0;roll:0;yaw:0;vgx:0;vgy:0;vgz:0;templ:57;temph:59;tof:10;h:0;bat:92;baro:130.00;time:0;agx:-12.00;agy:16.00;agz:-998.00;";
   }
 
   const telloState = decodeTelloState(telloStateString);

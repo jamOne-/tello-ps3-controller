@@ -1,7 +1,8 @@
 .TelloState {
   width: 100%;
   padding: 5px 10px;
-  background-color: #303751aa;
+  background-color: #30375140;
+  backdrop-filter: blur(5px);
 }
 
 .TelloState__row {
