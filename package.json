@@ -14,7 +14,7 @@
     "@types/socket.io-client": "^1.4.32",
     "@types/ws": "^6.0.3",
     "express": "^4.17.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "minimist": "^1.2.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
