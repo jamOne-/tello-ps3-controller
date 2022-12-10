@@ -13,7 +13,7 @@
     "@types/socket.io": "^2.1.2",
     "@types/socket.io-client": "^1.4.32",
     "@types/ws": "^6.0.3",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "lodash": "^4.17.11",
     "minimist": "^1.2.0",
     "react": "^16.7.0",
